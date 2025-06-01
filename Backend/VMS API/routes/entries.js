@@ -23,6 +23,7 @@ router.post("/", async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     hours: req.body.hours,
+    approved: req.body.approved,
   });
   try {
     const newEntry = await entry.save();
@@ -42,6 +43,9 @@ router.patch("/:id", getEntry, async (req, res) => {
   }
   if (req.body.hours != null) {
     res.entry.hours = req.body.hours;
+  }
+  if (req.body.approved != null) {
+    res.entry.approved = req.body.approved;
   }
   try {
     const updatedEntry = await res.entry.save();

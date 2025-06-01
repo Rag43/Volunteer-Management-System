@@ -13,6 +13,10 @@ const entrySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  approved: {
+    type: String,
+    default: "pending",
+  },
 });
 
 module.exports = mongoose.model("Entry", entrySchema);
