@@ -22,6 +22,8 @@ app.use("/volunteers", volunteersRouter);
 const entriesRouter = require("./routes/entries.js");
 app.use("/entries", entriesRouter);
 
-app.listen(3000, () => {
-  console.log("Server has started");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server has started on port ${PORT}");
 });
