@@ -12,6 +12,10 @@ const volunteerSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
+  hours: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Volunteer", volunteerSchema);

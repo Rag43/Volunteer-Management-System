@@ -23,6 +23,7 @@ router.post("/", async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
+    hours: req.body.hours,
   });
   try {
     const newVolunteer = await volunteer.save();
@@ -42,6 +43,9 @@ router.patch("/:id", getVolunteer, async (req, res) => {
   }
   if (req.body.phone != null) {
     res.volunteer.phone = req.body.phone;
+  }
+  if (req.body.hours != null) {
+    res.volunteer.hours = req.body.hours;
   }
   try {
     const updatedVolunteer = await res.volunteer.save();
