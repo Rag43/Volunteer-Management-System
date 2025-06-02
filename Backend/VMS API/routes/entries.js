@@ -20,6 +20,7 @@ router.get("/:id", getEntry, (req, res) => {
 // Creating one
 router.post("/", async (req, res) => {
   const entry = new Entry({
+    volunteer: req.body.volunteer,
     title: req.body.title,
     description: req.body.description,
     hours: req.body.hours,
@@ -35,6 +36,9 @@ router.post("/", async (req, res) => {
 
 // Updating one
 router.patch("/:id", getEntry, async (req, res) => {
+  if (req.body.volunteer != null) {
+    res.entry.volunteer = req.body.volunteer;
+  }
   if (req.body.title != null) {
     res.entry.title = req.body.title;
   }

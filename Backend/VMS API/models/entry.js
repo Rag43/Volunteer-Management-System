@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const entrySchema = new mongoose.Schema({
+  volunteer: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
