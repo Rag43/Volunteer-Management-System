@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const entrySchema = new mongoose.Schema({
   volunteer: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Volunteer",
     required: true,
   },
   title: {

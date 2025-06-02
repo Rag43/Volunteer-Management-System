@@ -5,7 +5,7 @@ const Entry = require("../models/entry");
 // Getting all
 router.get("/", async (req, res) => {
   try {
-    const entries = await Entry.find();
+    const entries = await Entry.find().populate("volunteer");
     res.json(entries);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -72,7 +72,7 @@ router.delete("/:id", getEntry, async (req, res) => {
 async function getEntry(req, res, next) {
   let entry;
   try {
-    entry = await Entry.findById(req.params.id);
+    entry = await Entry.findById(req.params.id).populate("volunteer");
     if (entry == null) {
       return res.status(404).json({ message: "Cannot find entry" });
     }
