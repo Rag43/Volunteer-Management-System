@@ -1,19 +1,20 @@
-import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.net.http.HttpRequest;
 import java.net.http.HttpClient;
 import java.net.URI;
 
-public class EntryFetcher {
+public class EntryManager {
 
     public static List<Entry> fetchEntries() {
         try {
             HttpRequest entryRequest = HttpRequest.newBuilder()
-                    .uri(new URI("https://volunteer-management-system-ahfb.onrender.com/entries"))
+                    .uri(new URI("http://localhost:3000/entries"))
                     .GET()
                     .build();
 
@@ -62,9 +63,81 @@ public class EntryFetcher {
         return pendingEntries;
     }
 
+    public static boolean denyEntry(Entry entry) {
+        String uri = "http://localhost:3000/entries/" + entry.get_id();
+        try {
+            HttpRequest patchRequest = HttpRequest.newBuilder()
+                    .uri(new URI(uri))
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString("{\"approved\":\"denied\"}"))
+                    .header("content-type", "application/json")
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(patchRequest, HttpResponse.BodyHandlers.ofString());
+
+            return response.statusCode() == 200 || response.statusCode() == 204 || response.statusCode() == 202;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean approveEntry(Entry entry) {
+        String uri = "http://localhost:3000/entries/" + entry.get_id();
+
+        try {
+            HttpRequest patchRequest = HttpRequest.newBuilder()
+                    .uri(new URI(uri))
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString("{\"approved\":\"approved\"}"))
+                    .header("content-type", "application/json")
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(patchRequest, HttpResponse.BodyHandlers.ofString());
+
+            // Update hours based on approved entry
+            boolean updatedHours = updateHours(entry.getVolunteer(), entry.getHours());
+            if (!updatedHours) {
+                return false;
+            }
+
+            return response.statusCode() == 200 || response.statusCode() == 204 || response.statusCode() == 202;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateHours(Volunteer volunteer, double entryHours) {
+        String uri = "http://localhost:3000/volunteers/" + volunteer.getId();
+        double hours = volunteer.getHours() + entryHours;
+
+        // Get JSON body using gson
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("hours", hours);
+        String json = jsonObject.toString();
+
+        try {
+            HttpRequest patchRequest = HttpRequest.newBuilder()
+                    .uri(new URI(uri))
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+                    .header("content-type", "application/json")
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(patchRequest, HttpResponse.BodyHandlers.ofString());
+
+            return response.statusCode() == 200 || response.statusCode() == 204 || response.statusCode() == 202;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
-        for (Entry entry : fetchPendingEntries()) {
-            System.out.println(entry.getVolunteer());
+        List<Entry> entries = fetchEntries();
+        for (Entry entry : entries) {
+            if (entry.getApproved().equals("denied")) System.out.println(entry.getVolunteer());
         }
     }
 }

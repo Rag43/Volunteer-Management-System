@@ -9,7 +9,7 @@ public class StartScreen {
         // Create the main frame
         JFrame frame = new JFrame("Volunteer Management Hub");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);  // You can adjust the size as needed
+        frame.setSize(400, 250);  // Slightly reduced height
         frame.setLocationRelativeTo(null);  // Center the window
 
         // Create a panel with vertical layout
@@ -28,17 +28,14 @@ public class StartScreen {
         // Create buttons
         JButton volunteersButton = new JButton("Volunteers");
         JButton sessionsButton = new JButton("Session Entries");
-        JButton notificationsButton = new JButton("Notifications");
 
         // Center-align buttons
         volunteersButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sessionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        notificationsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add empty action listeners
+        // Add action listeners
         volunteersButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Implement Volunteers button functionality
                 frame.dispose();
                 VolunteerScreen.volunteerScreen();
             }
@@ -46,13 +43,8 @@ public class StartScreen {
 
         sessionsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Implement Session Entries functionality
-            }
-        });
-
-        notificationsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO: Implement Notifications functionality
+                frame.dispose();
+                EntryScreen.entryScreen();
             }
         });
 
@@ -60,8 +52,6 @@ public class StartScreen {
         panel.add(volunteersButton);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
         panel.add(sessionsButton);
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
-        panel.add(notificationsButton);
 
         // Add panel to frame
         frame.getContentPane().add(panel);

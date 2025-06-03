@@ -17,10 +17,12 @@ public class VolunteerScreen {
         frame.setSize(700, 600);
         frame.setLayout(new BorderLayout());
 
-        // Top control panel
+        // Inside volunteerScreen()
+
+// Top control panel
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Left-side buttons
+// Left-side buttons
         JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton homeButton = new JButton("Home");
         JButton refreshButton = new JButton("Refresh");
@@ -35,7 +37,22 @@ public class VolunteerScreen {
         leftButtons.add(homeButton);
         leftButtons.add(refreshButton);
 
-        // Right-side button
+// Center buttons
+        JPanel centerButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton resetHoursButton = new JButton("Reset Hours");
+        JButton clearAllButton = new JButton("Clear All Volunteers");
+
+// Leave these empty for you to implement
+        resetHoursButton.addActionListener(e -> {
+            // TODO: Implement Reset Hours functionality
+        });
+        clearAllButton.addActionListener(e -> {
+            // TODO: Implement Clear All Volunteers functionality
+        });
+        centerButtons.add(resetHoursButton);
+        centerButtons.add(clearAllButton);
+
+// Right-side button
         JPanel rightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton addButton = new JButton("Add Volunteer");
         addButton.addActionListener(e -> {
@@ -44,15 +61,17 @@ public class VolunteerScreen {
         rightButtons.add(addButton);
 
         topPanel.add(leftButtons, BorderLayout.WEST);
+        topPanel.add(centerButtons, BorderLayout.CENTER);
         topPanel.add(rightButtons, BorderLayout.EAST);
         frame.add(topPanel, BorderLayout.NORTH);
+
 
         // Panel for volunteer list
         JPanel volunteerListPanel = new JPanel();
         volunteerListPanel.setLayout(new BoxLayout(volunteerListPanel, BoxLayout.Y_AXIS));
         volunteerListPanel.setBackground(Color.WHITE);
 
-        List<Volunteer> volunteers = VolunteerFetcher.fetchVolunteers();
+        List<Volunteer> volunteers = VolunteerManager.fetchVolunteers();
 
         for (Volunteer v : volunteers) {
             JPanel volunteerPanel = new JPanel();
@@ -71,12 +90,13 @@ public class VolunteerScreen {
             infoPanel.add(new JLabel("Name: " + v.getName()));
             infoPanel.add(new JLabel("Email: " + v.getEmail()));
             infoPanel.add(new JLabel("Phone: " + v.getPhone()));
+            infoPanel.add(new JLabel("Total Hours: " + v.getHours()));
 
             // Manage button on the right
             JButton manageButton = new JButton("Delete");
             manageButton.addActionListener(e -> {
                 String id = v.getId();
-                boolean deleted = deleteVolunteer(id);
+                boolean deleted = VolunteerManager.deleteVolunteer(id);
                 if (deleted) {
                     JOptionPane.showMessageDialog(null, "Volunteer Deleted Successfully. Please refresh screen.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -102,46 +122,9 @@ public class VolunteerScreen {
         frame.setVisible(true);
     }
 
-    public static boolean deleteVolunteer(String id) {
-        try {
-            String url = "http://localhost:3000/volunteers/" + id;
-            HttpRequest deleteRequest = HttpRequest.newBuilder()
-                    .uri(new URI(url))
-                    .DELETE()
-                    .build();
 
-            HttpClient client = HttpClient.newHttpClient();
 
-            HttpResponse<String> response = client.send(deleteRequest, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200 || response.statusCode() == 204;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
-    public static boolean addVolunteer(String name, String email, String phone) {
-        try {
-            Volunteer volunteer = new Volunteer(name, email, phone);
-            Gson gson = new Gson();
-            String json = gson.toJson(volunteer);
-            HttpRequest addRequest = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:3000/volunteers"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response = client.send(addRequest, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-
-            return response.statusCode() == 200 || response.statusCode() == 201;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public static void addVolunteerScreen() {
         JFrame addFrame = new JFrame("Add Volunteer");
@@ -194,7 +177,7 @@ public class VolunteerScreen {
             String email = emailField.getText().trim();
             String phone = phoneField.getText().trim();
 
-            boolean added = addVolunteer(name, email, phone);
+            boolean added = VolunteerManager.addVolunteer(name, email, phone);
             addFrame.dispose();
             if (added) JOptionPane.showMessageDialog(null, "Volunteer Added. Please Refresh Screen.", "Success", JOptionPane.INFORMATION_MESSAGE);
             else JOptionPane.showMessageDialog(null, "Couldn't Add Volunteer. Try Again Later.", "Failed", JOptionPane.ERROR_MESSAGE);
