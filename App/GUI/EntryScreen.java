@@ -8,11 +8,11 @@ public class EntryScreen {
         // Create frame
         JFrame frame = new JFrame("Entry Screen");
         frame.setSize(300, 250);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null); // Center on screen
         frame.setLayout(new BorderLayout());
 
-        // Top panel with Home button and title
+        // Top panel with Home button, title, and Clear Entries
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // Home button (top-left)
@@ -29,6 +29,19 @@ public class EntryScreen {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         topPanel.add(titleLabel, BorderLayout.CENTER);
 
+        // Clear Entries button (top-right)
+        JButton clearButton = new JButton("Clear Entries");
+        clearButton.addActionListener(e -> {
+            boolean cleared = EntryManager.clearEntries();
+            if (cleared) {
+                JOptionPane.showMessageDialog(null, "All Entries Cleared", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Couldn't Clear All Entries", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+
+        });
+        topPanel.add(clearButton, BorderLayout.EAST);
+
         frame.add(topPanel, BorderLayout.NORTH);
 
         // Panel with 3 vertically aligned buttons
@@ -39,7 +52,6 @@ public class EntryScreen {
         JButton approvedButton = new JButton("Approved Entries");
         approvedButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         approvedButton.addActionListener(e -> {
-            // TODO: Handle Approved Entries
             frame.dispose();
             approvedEntries();
         });
@@ -47,7 +59,6 @@ public class EntryScreen {
         JButton deniedButton = new JButton("Denied Entries");
         deniedButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         deniedButton.addActionListener(e -> {
-            // TODO: Handle Denied Entries
             frame.dispose();
             deniedEntries();
         });
@@ -55,7 +66,6 @@ public class EntryScreen {
         JButton pendingButton = new JButton("Pending Entries");
         pendingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         pendingButton.addActionListener(e -> {
-            // TODO: Handle Pending Entries
             frame.dispose();
             pendingEntries();
         });
@@ -70,6 +80,7 @@ public class EntryScreen {
         frame.add(buttonPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
+
 
     public static void approvedEntries() {
         JFrame frame = new JFrame("Approved Entries");

@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import javax.swing.*;
 import java.net.http.HttpRequest;
 import java.net.http.HttpClient;
 import java.net.URI;
@@ -132,6 +133,42 @@ public class EntryManager {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean deleteEntry(String id) {
+        String uri = "http://localhost:3000/entries/" + id;
+        try {
+            HttpRequest deleteRequest = HttpRequest.newBuilder()
+                    .uri(new URI(uri))
+                    .DELETE()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(deleteRequest, HttpResponse.BodyHandlers.ofString());
+
+            return response.statusCode() == 204 || response.statusCode() == 202 || response.statusCode() == 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean clearEntries() {
+        List<Entry> entries = fetchEntries();
+        if (entries.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No Entries to Clear", "None", JOptionPane.INFORMATION_MESSAGE);
+            return true;
+        }
+        for (Entry entry : entries) {
+            // for each entry, send a DELETE request with its _id (deleteEntry())
+            boolean deleted = deleteEntry(entry.get_id());
+            if (!deleted) {
+                String message = "Couldn't delete entry: " + entry.get_id();
+                JOptionPane.showMessageDialog(null, message, "Problem Occurred", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {

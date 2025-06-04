@@ -1,10 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const Volunteer = require("../models/volunteer");
+const volunteer = require("../models/volunteer");
 
 // Getting all
 router.get("/", async (req, res) => {
   try {
+    // Check for name query
+    if (req.query.name) {
+      const volunteer = await Volunteer.findOne({ name: req.query.name });
+      if (!volunteer) {
+        return res.status(404).json({ message: "Volunteer not Found" });
+      }
+      // Send volunteer based on name
+      return res.json(volunteer);
+    }
+    // Otherwise fetch all volunteers if no name query
     const volunteers = await Volunteer.find();
     res.json(volunteers);
   } catch (err) {

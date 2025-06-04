@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volunteer Session Entry Form</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Volunteer Session Entry Form</h1>
+      <p>Please fill the following fields and click submit</p>
+      <form id="session-form">
+        <input
+          type="text"
+          id="volunteer-name"
+          placeholder="Volunteer Name"
+          required
+        />
+        <input type="text" id="title" placeholder="Title" required />
+        <textarea
+          id="description"
+          placeholder="Description"
+          rows="5"
+          required
+        ></textarea>
+        <input
+          type="number"
+          id="hours"
+          placeholder="Hours"
+          min="0"
+          step="0.1"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <script src="script.js"></script>
+    </div>
+  </body>
+</html>
