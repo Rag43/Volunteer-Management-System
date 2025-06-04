@@ -30,7 +30,6 @@ The Volunteer Management System is a full-stack application for logging and trac
 
 Note: Node.js must be installed on the computer
 
-### 📦 Backend (Express Server)
 
 1. Install dependencies:
    Navigate to the 'VMS API' folder in the terminal and run:
