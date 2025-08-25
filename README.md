@@ -1,6 +1,6 @@
 # Volunteer Management System
 
-The Volunteer Management System is a full-stack application for logging and tracking volunteer information and hours. It consists of a Node.js backend connected to a MongoDB database, a web-based frontend for data submission (volunteer registration & entry submission), and a desktop Java Swing application to manage volunteers and entries. This project was adapted and deployed using Render for use by a local cultural nonprofit called "Itihaasa". The deployment is not included in this repository, so all API calls assume the server runs on localhost, defaulting to port 3000.
+The Volunteer Management System is a full-stack application for logging and tracking volunteer information and hours. It consists of a Node.js backend connected to a MongoDB database, a web-based frontend for data submission (volunteer registration & entry submission), and a desktop Java Swing application to manage volunteers and entries. This project was adapted and deployed using Render for use by a local cultural nonprofit called Kalainirai Foundation. The deployment is not included in this repository, so all API calls assume the server runs on localhost, defaulting to port 3000.
 
 ## 1. Features
 
